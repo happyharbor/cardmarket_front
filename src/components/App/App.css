@@ -1,0 +1,12 @@
+.wrapper {
+  padding: 20px;
+}
+
+.child-wrapper {
+  padding: 10px;
+}
+
+.login-bar {
+  display: flex;
+  margin-bottom: 10px;
+}
