@@ -1,6 +1,6 @@
 const prod = {
     url: {
-        API_URL: 'https://cardmarket.happyharbor.io:50501/'
+        API_URL: 'https://cardmarket.happyharbor.io/api/'
     }
 };
 

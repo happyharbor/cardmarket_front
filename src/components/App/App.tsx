@@ -1,34 +1,50 @@
 import React from 'react';
 
 import './App.css';
-import UpdatePrices from '../UpdatePrices/UpdatePrices';
 import Login from '../Login/Login';
-import GetAddresses from '../GetAddresses/GetAddresses';
 import useToken from "../../hooks/useToken";
 import useUser from "../../hooks/useUser";
+import Register from "../Register/Register";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import Home from "../Home/Home";
+import showComponent from "../../helpers/showComponent";
 
 function App() {
     const {token, setToken, removeToken} = useToken();
     const {user, setUser} = useUser();
 
+    const changeUser = (userToken: IUserToken, iUser: IUser) => {
+        setToken(userToken)
+        setUser(iUser)
+    }
+
     if (!token) {
-        return <Login setToken={setToken} setUser={setUser}/>
+        return <Login changeUser={changeUser}/>
     }
 
     return (
-        <div className="wrapper">
-            <h1>Application</h1>
-            <div className="login-bar">
-                <div>Hi {user.username},</div>
-                <div>
-                    <button onClick={removeToken}>
-                        Logout
-                    </button>
+        <Router>
+            <div className="wrapper">
+                <h1>Cardmarket Application</h1>
+                <div className="login-bar">
+                    <div>Hi {user.username},</div>
+                    <div>
+                        <button onClick={removeToken}>
+                            Logout
+                        </button>
+                    </div>
                 </div>
+
+                <Switch>
+                    <Route path="/register">
+                        {showComponent(Register.name, user.roles) && <Register/>}
+                    </Route>
+                    <Route path="/">
+                        <Home user={user}/>
+                    </Route>
+                </Switch>
             </div>
-            <GetAddresses allowedRoles={["admin", "user"]}/>
-            <UpdatePrices allowedRoles={["admin"]}/>
-        </div>
+        </Router>
     );
 }
 

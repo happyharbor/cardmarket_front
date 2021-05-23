@@ -2,11 +2,9 @@ import React, {useState} from 'react';
 import {config} from "../../constants";
 import useToken from "../../hooks/useToken";
 import {throws} from "assert";
-import useUser from "../../hooks/useUser";
 
-export default function GetAddresses({allowedRoles}: {allowedRoles: string[]}) {
+export default function GetAddresses() {
     const {token} = useToken();
-    const {user} = useUser();
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const onClick = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -55,10 +53,6 @@ export default function GetAddresses({allowedRoles}: {allowedRoles: string[]}) {
             )
             .catch(error => throws(() => error))
     };
-
-    if (!user.roles.filter(role => allowedRoles.includes(role))) {
-        return null;
-    }
 
     return (
         <div className="child-wrapper">

@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import './Login.css';
 import {config} from "../../constants";
+import useToken from "../../hooks/useToken";
 
-interface ICredentials {
+interface IRegister {
     username: string,
-    password: string
+    password: string,
+    role: string
 }
 
 interface IError {
@@ -13,11 +14,14 @@ interface IError {
     errorMsg?: string
 }
 
-async function loginUser(credentials: ICredentials, setAlert: (alert: IError) => void): Promise<IUserToken> {
-    return fetch(`${config.url.API_URL}users/login`, {
+async function registerUser(credentials: IRegister,
+                            setAlert: (alert: IError) => void,
+                            token: string | null): Promise<IUserToken> {
+    return fetch(`${config.url.API_URL}users/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(credentials)
     })
@@ -31,33 +35,20 @@ async function loginUser(credentials: ICredentials, setAlert: (alert: IError) =>
         })
 }
 
-async function getUser(token: string): Promise<IUser> {
-    return fetch(`${config.url.API_URL}users/me`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-        .then(data => data.json())
-}
-
-export default function Login({changeUser}: { changeUser: (token: IUserToken, user: IUser) => void }) {
+export default function Register() {
     const [username, setUserName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [role, setRole] = useState<string>('');
     const [alert, setAlert] = useState<IError>({error: false});
+    const {token} = useToken();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const token = await loginUser({
+        await registerUser({
             username,
-            password
-        }, setAlert);
-
-        if (token === null) {
-            return;
-        }
-        const user = await getUser(token.token);
-        changeUser(token, user)
+            password,
+            role
+        }, setAlert, token);
     }
 
     useEffect(() => {
@@ -70,7 +61,7 @@ export default function Login({changeUser}: { changeUser: (token: IUserToken, us
 
     return (
         <div className="login-wrapper">
-            <h1>Please Log In</h1>
+            <h2>You may register a new user</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     <p>Username</p>
@@ -79,6 +70,13 @@ export default function Login({changeUser}: { changeUser: (token: IUserToken, us
                 <label>
                     <p>Password</p>
                     <input type="password" onChange={e => setPassword(e.target.value)}/>
+                </label>
+                <label>
+                    <p>Role</p>
+                    <select value={role} onChange={e => setRole(e.target.value)}>
+                        <option value="admin">Administrator</option>
+                        <option value="user">User</option>
+                    </select>
                 </label>
                 <div>
                     <button type="submit" style={{marginTop: "20px"}}>Submit</button>

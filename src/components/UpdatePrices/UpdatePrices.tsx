@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import useToken from "../../hooks/useToken";
 import {config} from "../../constants";
-import useUser from "../../hooks/useUser";
 
-export default function UpdatePrices({allowedRoles}: {allowedRoles: string[]}) {
+export default function UpdatePrices() {
     const [alert, setAlert] = useState<boolean>(false);
     const {token} = useToken();
-    const {user} = useUser();
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     useEffect(() => {
@@ -31,10 +29,6 @@ export default function UpdatePrices({allowedRoles}: {allowedRoles: string[]}) {
                 setAlert(true);
             })
     };
-
-    if (user.roles.filter(role => allowedRoles.includes(role)).length === 0) {
-        return null;
-    }
 
     return (
         <div className="child-wrapper">
