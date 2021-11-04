@@ -1,6 +1,7 @@
 import GetAddresses from "../components/GetAddresses/GetAddresses";
 import Register from "../components/Register/Register";
 import UpdatePrices from "../components/UpdatePrices/UpdatePrices";
+import {ERole} from "../enums";
 
 export default function showComponent(component: string, roles: string[] ): boolean {
 
@@ -8,9 +9,9 @@ export default function showComponent(component: string, roles: string[] ): bool
         case GetAddresses.name:
             return true;
         case Register.name:
-            return roles.includes("admin");
+            return roles.includes(ERole.Admin);
         case UpdatePrices.name:
-            return roles.includes("admin");
+            return roles.includes(ERole.Admin);
         default:
             return false;
     }

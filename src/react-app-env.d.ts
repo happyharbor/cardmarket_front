@@ -4,11 +4,6 @@ interface IUserToken {
     expiry: Date
 }
 
-enum ERole {
-    Admin = "admin",
-    User = "user"
-}
-
 interface IUser {
     id: string
     username: string

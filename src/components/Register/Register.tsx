@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {config} from "../../constants";
 import useToken from "../../hooks/useToken";
+import {ERole} from "../../enums";
 
 interface IRegister {
     username: string,
@@ -74,8 +75,8 @@ export default function Register() {
                 <label>
                     <p>Role</p>
                     <select value={role} onChange={e => setRole(e.target.value)}>
-                        <option value="admin">Administrator</option>
-                        <option value="user">User</option>
+                        <option value={ERole.Admin}>Administrator</option>
+                        <option value={ERole.User}>User</option>
                     </select>
                 </label>
                 <div>
