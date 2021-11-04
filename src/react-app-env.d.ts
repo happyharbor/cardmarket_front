@@ -1,6 +1,7 @@
 /// <reference types="react-scripts" />
 interface IUserToken {
     token: string
+    expiry: Date
 }
 
 enum ERole {
