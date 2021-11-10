@@ -1,0 +1,48 @@
+executors:
+  node-executor:
+    docker:
+      - image: 'cimg/node:current'
+orbs:
+  node: circleci/node@4.7.0
+version: 2.1
+
+jobs:
+  deploy:
+    executor:
+      node-executor
+
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "11:55:85:8e:fb:0f:2b:34:10:e1:e4:c7:ea:de:47:16"
+      - run:
+          name: Add host to known_hosts
+          command: |
+            echo $HOST_SIGNATURE_1 >> ~/.ssh/known_hosts
+            echo $HOST_SIGNATURE_2 >> ~/.ssh/known_hosts
+      - run:
+          name: Build project
+          command: |
+            npm install
+            npm run build
+      - run:
+          name: Copy build folder
+          command: |
+            cd build
+            touch cardmarket-site.tgz
+            tar -czf cardmarket-site.tgz --exclude=cardmarket-site.tgz .
+            scp -P $SSH_PORT cardmarket-site.tgz $SSH_USER@$SSH_HOST:~/cardmarket
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "tar -xf cardmarket/cardmarket-site.tgz -C /var/www/cardmarket.happyharbor.io"
+
+
+workflows:
+  test_and_publish:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: main
