@@ -29,6 +29,10 @@ async function loginUser(credentials: ICredentials, setAlert: (alert: IError) =>
             }
             return json;
         })
+        .catch(reason => {
+            setAlert({error: true, httpStatus: 500, errorMsg: reason.message});
+            return null;
+        })
 }
 
 async function getUser(token: string): Promise<IUser> {

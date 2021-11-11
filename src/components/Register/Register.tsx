@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {config} from "../../constants";
 import useToken from "../../hooks/useToken";
 import {ERole} from "../../enums";
+import {useHistory} from "react-router-dom";
 
 interface IRegister {
     username: string,
@@ -28,7 +29,7 @@ async function registerUser(credentials: IRegister,
     })
         .then(data => data.json())
         .then(json => {
-            if (json.error !== undefined) {
+            if (json.token === undefined) {
                 setAlert({error: true, httpStatus: json.status, errorMsg: JSON.stringify(json)});
                 return null;
             }
@@ -39,17 +40,21 @@ async function registerUser(credentials: IRegister,
 export default function Register() {
     const [username, setUserName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [role, setRole] = useState<string>('');
+    const [role, setRole] = useState<string>(ERole.User);
     const [alert, setAlert] = useState<IError>({error: false});
     const {token} = useToken();
+    const history = useHistory();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await registerUser({
+        const iUserToken = await registerUser({
             username,
             password,
             role
         }, setAlert, token);
+        if (iUserToken !== null && iUserToken.token !== undefined) {
+            return history.goBack();
+        }
     }
 
     useEffect(() => {
@@ -75,18 +80,23 @@ export default function Register() {
                 <label>
                     <p>Role</p>
                     <select value={role} onChange={e => setRole(e.target.value)}>
-                        <option value={ERole.Admin}>Administrator</option>
                         <option value={ERole.User}>User</option>
+                        <option value={ERole.Admin}>Administrator</option>
                     </select>
                 </label>
-                <div>
-                    <button type="submit" style={{marginTop: "20px"}}>Submit</button>
-                    {alert.error &&
-                    <div>
-                        <p>Status:{alert.httpStatus}</p>
-                        <p>Message: {alert.errorMsg}</p>
-                    </div>}
+                <div className="register-btn">
+                    <span className="child-wrapper">
+                        <button type="submit" style={{marginTop: "20px"}}>Submit</button>
+                    </span>
+                    <span className="child-wrapper">
+                        <button onClick={history.goBack}>Back</button>
+                    </span>
                 </div>
+                {alert.error &&
+                <div>
+                    <p>Status:{alert.httpStatus}</p>
+                    <p>Message: {alert.errorMsg}</p>
+                </div>}
             </form>
         </div>
     )
