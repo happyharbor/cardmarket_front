@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {config} from "../../constants";
 import useToken from "../../hooks/useToken";
 import {ERole} from "../../enums";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 interface IRegister {
     username: string,
@@ -43,7 +43,7 @@ export default function Register() {
     const [role, setRole] = useState<string>(ERole.User);
     const [alert, setAlert] = useState<IError>({error: false});
     const {token} = useToken();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -53,12 +53,12 @@ export default function Register() {
             role
         }, setAlert, token);
         if (iUserToken !== null && iUserToken.token !== undefined) {
-            return history.goBack();
+            return navigate(-1)
         }
     }
 
     useEffect(() => {
-        if(alert.error) {
+        if (alert.error) {
             setTimeout(() => {
                 setAlert({error: false});
             }, 10000)
@@ -89,14 +89,14 @@ export default function Register() {
                         <button type="submit" style={{marginTop: "20px"}}>Submit</button>
                     </span>
                     <span className="child-wrapper">
-                        <button onClick={history.goBack}>Back</button>
+                        <button onClick={() => navigate(-1)}>Back</button>
                     </span>
                 </div>
                 {alert.error &&
-                <div>
-                    <p>Status:{alert.httpStatus}</p>
-                    <p>Message: {alert.errorMsg}</p>
-                </div>}
+                    <div>
+                        <p>Status:{alert.httpStatus}</p>
+                        <p>Message: {alert.errorMsg}</p>
+                    </div>}
             </form>
         </div>
     )
