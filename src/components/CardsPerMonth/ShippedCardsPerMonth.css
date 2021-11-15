@@ -11,3 +11,10 @@
 .shipped-cards-table td {
     text-align: center;
 }
+
+.cliploader {
+    margin-top: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

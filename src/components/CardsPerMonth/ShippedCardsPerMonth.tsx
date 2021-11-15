@@ -3,6 +3,7 @@ import useToken from "../../hooks/useToken";
 import {getEnumKeyByEnumValue} from "../../enums";
 import './ShippedCardsPerMonth.css';
 import {config} from "../../constants";
+import {ClipLoader} from "react-spinners";
 
 interface IError {
     error: boolean,
@@ -33,6 +34,7 @@ export default function ShippedCardsPerMonth() {
 
     const onClick = async (e: React.FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        setData(undefined)
         setSubmitting(true);
 
         fetch(`${config.url.API_URL}order/number-cards-per-month?months=january,february,march,april,may,june,july,august,september,october,november,december`, {
@@ -58,7 +60,7 @@ export default function ShippedCardsPerMonth() {
     };
 
     useEffect(() => {
-        if(alert.error) {
+        if (alert.error) {
             setTimeout(() => {
                 setAlert({error: false});
             }, 10000)
@@ -81,6 +83,9 @@ export default function ShippedCardsPerMonth() {
             <button disabled={submitting} onClick={onClick}>
                 Shipped cards per month
             </button>
+            <div className='cliploader'>
+                <ClipLoader loading={submitting}/>
+            </div>
             {data &&
             <div className="shipped-cards-table">
                 <table>
