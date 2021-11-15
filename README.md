@@ -5,8 +5,15 @@
 The back end supports authorization/authentication.
 
 ### Homepage
-If you are a normal user only the Get Addresses will be displayed, if you are an
-admin then you may Update prices and Register new User
+
+#### Normal User
+- Get Addresses: The addresses of all the paid, but not shipped orders will be generated and saved in a csv.
+- Shipped Cards Per Month: A matrix will appear will the cards shipped during the last 12 months.
+
+#### Super User
+You get all the options of the Normal Users plus:
+- Update prices: You manually update the prices of the stock.
+- Register a user.
 
 ## Setting up development environment
 1. `npm install`

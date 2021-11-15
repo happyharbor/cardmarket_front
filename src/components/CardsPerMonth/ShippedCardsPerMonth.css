@@ -1,0 +1,13 @@
+.shipped-cards-table table, td, th {
+    border: 1px solid black;
+}
+
+.shipped-cards-table table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.shipped-cards-table td {
+    text-align: center;
+}
