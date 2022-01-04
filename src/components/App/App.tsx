@@ -36,12 +36,8 @@ function App() {
                 </div>
 
                 <Routes>
-                    <Route path="/register">
-                        {showComponent(Register.name, user.roles) && <Register/>}
-                    </Route>
-                    <Route path="/">
-                        <Home user={user}/>
-                    </Route>
+                    <Route path="/register" element={showComponent(Register.name, user.roles) && <Register/>} />
+                    <Route path="/" element={<Home user={user}/>} />
                 </Routes>
             </div>
         </Router>
