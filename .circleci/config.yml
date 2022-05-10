@@ -24,7 +24,7 @@ jobs:
       - run:
           name: Build project
           command: |
-            npm install
+            yarn
             npm run build
       - run:
           name: Copy build folder
